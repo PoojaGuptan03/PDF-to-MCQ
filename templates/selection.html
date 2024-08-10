@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Option</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>SELECT OPTION</h1>
+        <form method="get" action="/test_paper">
+            <input type="hidden" name="questions" value="{{ questions }}">
+            <button type="submit">Test Paper</button>
+        </form>
+        <form method="get" action="/practice">
+            <input type="hidden" name="questions" value="{{ questions }}">
+            <button type="submit">Practice</button>
+        </form>
+    </div>
+    <div class="container">
+        <h1>QUESTIONS</h1>
+        <div class="results">
+            {% for item in questions %}
+            <div class="question-container">
+                <div class="question">{{ item.question }}</div>
+                <ul class="options">
+                    {% for option in item.options %}
+                    <li>{{ option }}</li>
+                    {% endfor %}
+                </ul>
+                <div class="correct-answer">Correct Answer: {{ item.correctAnswer }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="/">Convert Another PDF</a>
+    </div>
+</body>
+</html>

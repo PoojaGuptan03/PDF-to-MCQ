@@ -1,0 +1,103 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212; /* Dark background color */
+    color: #fff; /* White text color */
+}
+
+.container {
+    max-width: 80%;
+    margin: 50px auto;
+    background-color: #1a1a1a; /* Darker container background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4); /* Soft shadow effect */
+}
+
+h1, h2 {
+    text-align: center;
+    color: #00ff00; /* Neon green color for headings */
+}
+
+form {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #00ff00; /* Neon green button */
+    color: #121212; /* Dark text color */
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,255,0,0.6); /* Neon green glow effect */
+}
+
+button:hover {
+    background-color: #00cc00; /* Darker neon green on hover */
+}
+
+.results {
+    margin-top: 20px;
+}
+
+.results p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #00ff00; /* Neon green link color */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.question-container {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #292929; /* Darker background for question containers */
+    border: 1px solid #00ff00; /* Neon green border */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,255,0,0.4); /* Neon green shadow effect */
+}
+
+.question {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #00ff00; /* Neon green color for question text */
+}
+
+.options {
+    margin-left: 20px;
+    list-style-type: none;
+}
+
+.options li {
+    margin-bottom: 5px;
+    color: #fff; /* White text color for options */
+}
+
+.correct-answer {
+    color: #00ff00; /* Neon green correct answer color */
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.correct {
+    color: #00ff00; /* Neon green for correct */
+}
+
+.incorrect {
+    color: #ff0000; /* Red for incorrect */
+}

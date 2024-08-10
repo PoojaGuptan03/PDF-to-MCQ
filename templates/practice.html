@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Practice Questions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .container {
+            width: 60%;
+            margin: 0 auto;
+        }
+        .question-container {
+            display: none;
+        }
+        .question-container.active {
+            display: block;
+        }
+    </style>
+    <script>
+        let currentQuestion = 0;
+
+        function showQuestion(index) {
+            const questions = document.querySelectorAll('.question-container');
+            questions.forEach((question, i) => {
+                if (i === index) {
+                    question.classList.add('active');
+                } else {
+                    question.classList.remove('active');
+                }
+            });
+            document.getElementById('result').textContent = ''; // Clear previous result
+        }
+
+        function checkAnswer(selectedOption, correctAnswer) {
+            const resultElement = document.getElementById('result');
+            if (selectedOption === correctAnswer) {
+                resultElement.textContent = 'Correct!';
+                resultElement.classList.add('correct');
+                resultElement.classList.remove('incorrect');
+            } else {
+                resultElement.textContent = `Incorrect! The correct answer is: ${correctAnswer}`;
+                resultElement.classList.add('incorrect');
+                resultElement.classList.remove('correct');
+            }
+        }
+
+        function nextQuestion() {
+            const questions = document.querySelectorAll('.question-container');
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                alert('You have completed all the questions.');
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            } else {
+                alert('This is the first question.');
+            }
+        }
+
+        window.onload = function() {
+            showQuestion(currentQuestion);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>PRACTICE QUESTIONS</h2>
+        <div class="results">
+            {% for item in questions %}
+            <div class="question-container">
+                <div class="question">{{ item.question }}</div>
+                <ul class="options">
+                    {% for option in item.options %}
+                    <li>
+                        <input type="radio" name="question_{{ loop.index }}" onclick="checkAnswer('{{ option }}', '{{ item.correctAnswer }}')">
+                        {{ option }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="result" class="result"></div><br>
+        <button onclick="previousQuestion()">Previous Question</button>
+        <button onclick="nextQuestion()">Next Question</button>
+    </div>
+    <a href="/" style="display: block; text-align: center; margin-top: 20px;">Convert Another PDF</a>
+</body>
+</html>

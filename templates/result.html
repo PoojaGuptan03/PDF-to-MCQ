@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversion Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Additional styling specific to results */
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Results</h1>
+        <div class="results">
+            {% for item in result_text %}
+            <div class="question-container">
+                <div class="question">{{ item.question }}</div>
+                <ul class="options">
+                    {% for option in item.options %}
+                    <li>{{ option }}</li>
+                    {% endfor %}
+                </ul>
+                <div class="correct-answer">Correct Answer: {{ item.correctAnswer }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="/">Convert Another PDF</a>
+    </div>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversion Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Conversion Results</h1>
+        <div class="results">
+            <p>{{ result_text }}</p>
+        </div>
+        <a href="/">Convert Another PDF</a>
+    </div>
+</body>
+</html> -->
+
+

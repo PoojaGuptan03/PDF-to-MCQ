@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Paper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-around;
+        }
+        .column {
+            width: 45%;
+            margin: 10px;
+        }
+        .question-container, .correct-answer-container {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            background-color: #292929;
+        }
+        .correct-answer-container {
+            background-color: #292929;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .correct-answer-question {
+            color: #fff; /* White color for the question text in the correct answer block */
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .correct-answer {
+            color: #00ff00; /* Neon green color for the correct answer text */
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        function updateSelectedQuestions() {
+            const selectedQuestionsContainer = document.getElementById('selected-questions');
+            const correctAnswersContainer = document.getElementById('correct-answers');
+            selectedQuestionsContainer.innerHTML = '';
+            correctAnswersContainer.innerHTML = '';
+            const checkboxes = document.querySelectorAll('.all-questions .question-container input[type="checkbox"]');
+            checkboxes.forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    const questionContainer = document.createElement('div');
+                    questionContainer.className = 'question-container';
+                    const questionText = document.querySelectorAll('.all-questions .question')[index].innerHTML;
+                    const optionsList = document.querySelectorAll('.all-questions .options')[index].innerHTML;
+                    questionContainer.innerHTML = `
+                        <div class="question">${questionText}</div>
+                        <ul class="options">${optionsList}</ul>
+                    `;
+                    selectedQuestionsContainer.appendChild(questionContainer);
+
+                    const correctAnswerContainer = document.createElement('div');
+                    correctAnswerContainer.className = 'correct-answer-container';
+                    const correctAnswerText = document.querySelectorAll('.all-questions .correct-answer')[index].innerHTML;
+                    correctAnswerContainer.innerHTML = `
+                        <div class="correct-answer-question">${questionText}</div>
+                        <div class="correct-answer">${correctAnswerText}</div>
+                    `;
+                    correctAnswersContainer.appendChild(correctAnswerContainer);
+                }
+            });
+        }
+
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const margin = 10;
+            let y = margin;
+            const lineHeight = 10;
+            const pageWidth = doc.internal.pageSize.width;
+            const pageHeight = doc.internal.pageSize.height;
+
+            function addLine() {
+                y += 5; // Space before the line
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 10; // Space after the line
+            }
+
+            function checkPageOverflow() {
+                if (y > pageHeight - margin) {
+                    doc.addPage();
+                    y = margin;
+                }
+            }
+
+            const selectedQuestionsContainer = document.getElementById('selected-questions');
+            const correctAnswersContainer = document.getElementById('correct-answers');
+
+            // Process selected questions
+            doc.setFontSize(12);
+            doc.text('Selected Questions:', margin, y);
+            y += lineHeight;
+
+            selectedQuestionsContainer.querySelectorAll('.question-container').forEach(questionContainer => {
+                const questionText = questionContainer.querySelector('.question').innerText;
+                const optionsList = questionContainer.querySelector('.options').innerText;
+
+                // Add question text
+                checkPageOverflow();
+                doc.text(questionText, margin, y);
+                y += lineHeight;
+
+                // Add options
+                optionsList.split('\n').forEach(option => {
+                    if (option.trim()) {
+                        checkPageOverflow();
+                        doc.text(option, margin + 5, y); // Slightly indented options
+                        y += lineHeight;
+                    }
+                });
+
+                // Draw a line after the question
+                addLine();
+            });
+
+            // Add space before correct answers
+            y += 20;
+            checkPageOverflow();
+            doc.addPage();
+            y = margin;
+            doc.text('Correct Answers:', margin, y);
+            y += lineHeight;
+
+            // Process correct answers
+            correctAnswersContainer.querySelectorAll('.correct-answer-container').forEach(answerContainer => {
+                const questionText = answerContainer.querySelector('.correct-answer-question').innerText;
+                const correctAnswerText = answerContainer.querySelector('.correct-answer').innerText;
+
+                // Add question text
+                checkPageOverflow();
+                doc.text(questionText, margin, y);
+                y += lineHeight;
+
+                // Add correct answer
+                checkPageOverflow();
+                doc.text(correctAnswerText, margin + 5, y); // Slightly indented correct answer
+                y += lineHeight;
+
+                // Draw a line after the answer
+                addLine();
+            });
+
+            doc.save('test_paper.pdf');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="column all-questions">
+            <h2>ALL QUESTIONS</h2>
+            <div class="results">
+                {% for item in questions %}
+                <div class="question-container">
+                    <input type="checkbox" onchange="updateSelectedQuestions()">
+                    <div class="question">{{ item.question }}</div>
+                    <ul class="options">
+                        {% for option in item.options %}
+                        <li>{{ option }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="correct-answer" style="display: none;">Correct Answer: {{ item.correctAnswer }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="column">
+            <h2>SELECTED QUESTIONS</h2>
+            <div id="selected-questions" class="results">
+                <!-- Selected questions will be appended here dynamically -->
+            </div>
+            <h2>CORRECT ANSWERS</h2>
+            <div id="correct-answers" class="results">
+                <!-- Correct answers will be appended here dynamically -->
+            </div>
+            <button onclick="downloadPDF()">Download PDF</button>
+        </div>
+    </div>
+    <a href="/" style="display: block; text-align: center; margin-top: 20px;">Convert Another PDF</a>
+</body>
+</html>
