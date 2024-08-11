@@ -7,10 +7,10 @@
 git clone git@github.com:PoojaGuptan03/PDF-to-MCQ.git
 ```
 ### 2. Install required libraries
-### 3. Set your api key
 ```bash
 pip install Flask pymupdf Pillow google-generativeai
 ```
+### 3. Set your api key
 ### 4. Make folders
 ```bash
 mkdir uploads generated images
